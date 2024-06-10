@@ -9,11 +9,11 @@ class TransactionQuerySet(models.QuerySet):
         return self.filter(type='income')
     
     def get_total_expenses(self):
-        self.get_expenses().aggregate(
+        return self.get_expenses().aggregate(
             total = models.Sum('amount')
         )['total'] or 0
     
     def get_total_income(self):
-        self.get_income().aggregate(
+        return self.get_income().aggregate(
             total = models.Sum('amount')
         )['total'] or 0
