@@ -11,6 +11,7 @@ def test_queryset_get_income_method(transactions):
     assert all(
         [transaction.type == 'income' for transaction in qs]
     )
+    print(f'type=income transaction test passed, {count} entries')
  
 @pytest.mark.django_db
 def test_queryset_get_expenses_method(transactions):
