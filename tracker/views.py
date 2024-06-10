@@ -14,4 +14,8 @@ def transactions_list(request):
         queryset=Transaction.objects.filter(user=request.user)
     )
     context = {'filter': transaction_filter}
-    return render(request, 'tracker/transactions-list.html', context)
+    
+    if request.htmx:
+        return render(request, 'tracker/partials/transactions-container.html', context)
+    else:
+        return render(request, 'tracker/transactions-list.html', context)
