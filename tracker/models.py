@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from .managers import TransactionQuerySet
 
 class User(AbstractUser):
     pass
@@ -30,6 +31,8 @@ class Transaction(models.Model):
     # when category deleted, set any transactions with that category to Unknown
     category = models.ForeignKey(Category, on_delete=models.SET('Unknown'))
     date = models.DateField()
+    
+    objects = TransactionQuerySet.as_manager()
 
     def __str__(self):
         return f"{self.type} of {self.amount} on {self.date} by {self.user}"
