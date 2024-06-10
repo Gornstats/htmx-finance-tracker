@@ -11,7 +11,8 @@ def index(request):
 def transactions_list(request):
     transaction_filter = TransactionFilter(
         request.GET,
-        queryset=Transaction.objects.filter(user=request.user)
+        # select_related avoids n+1 problem, creates JOIN to include related model data
+        queryset=Transaction.objects.filter(user=request.user).select_related('category')
     )
     context = {'filter': transaction_filter}
     
