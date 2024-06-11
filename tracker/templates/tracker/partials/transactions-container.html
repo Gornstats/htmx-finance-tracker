@@ -21,7 +21,7 @@
                     <tr>
                         <td>${{ total_income|floatformat:2|intcomma }}</td>
                         <td>${{ total_expenses|floatformat:2|intcomma }}</td>
-                        <td>${{ net_income|floatformat:2|intcomma }}</td>
+                        <td class="{% if net_income < 0 %}text-red-500{% endif %}">${{ net_income|floatformat:2|intcomma }}</td>
                     </tr>
                 </tbody>
             </table>
