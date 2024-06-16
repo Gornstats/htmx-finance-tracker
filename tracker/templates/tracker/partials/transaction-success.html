@@ -10,6 +10,7 @@
     </button>
     <button class="btn btn-success"
         hx-get="{% url 'transactions-list' %}"
+        hx-push-url="true"
         hx-target="#transaction-block">
         VIEW your transactions
       </button>
