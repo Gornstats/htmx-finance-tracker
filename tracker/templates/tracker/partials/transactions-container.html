@@ -26,11 +26,20 @@
                 </tbody>
             </table>
         </div>
-
+        <div class="flex justify-between mt-4 mb-6">
+            <h1 class="mt-8 mb-4 prose prose-2xl text-white">
+                Transactions
+            </h1>
+            <a hx-get="{% url 'create-transaction' %}" 
+                hx-push-url="true" 
+                hx-target="#transaction-block" 
+                class="cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="rgb(0,169,110)" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 hover:fill-green-700">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+            </a>
+        </div>
         {% if filter.qs %}
-        <h1 class="mt-8 mb-4 prose prose-2xl text-white">
-            Transactions
-        </h1>
         <table class="table">
             <thead class="text-xs text-white uppercase">
                 <tr>
@@ -82,7 +91,7 @@
                 {% render_field filter.form.category class="border-gray-50 text-gray-100 rounded focus:ring-green-500" %}
             </div>
     
-            <button class="btn btn-success">
+            <button class="btn btn-success text-gray-100 hover:fill-green-700">
                 Filter
             </button>
         </form>         

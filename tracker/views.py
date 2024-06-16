@@ -26,3 +26,7 @@ def transactions_list(request):
         return render(request, 'tracker/partials/transactions-container.html', context)
     else:
         return render(request, 'tracker/transactions-list.html', context)
+
+@login_required
+def create_transaction(request):
+    pass
