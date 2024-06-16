@@ -31,6 +31,17 @@ def transactions_list(request):
 
 @login_required
 def create_transaction(request):
+    if request.method == 'POST':
+        form = TransactionForm(request.POST)
+        if form.is_valid():
+            # do not immediately add (commit) form data to database
+            transaction = form.save(commit=False)
+            # add user to transaction first
+            transaction.user = request.user
+            transaction.save()
+            context = {'message': "Transaction added successfully"}
+            return render(request, 'tracker/partials/transaction-success.html', context)
+    
     context = {'form': TransactionForm()}
 
     if request.htmx:
