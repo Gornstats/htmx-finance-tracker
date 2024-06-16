@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from tracker.models import Transaction
 from tracker.filters import TransactionFilter
+from tracker.forms import TransactionForm
 
 # Create your views here.
 def index(request):
@@ -29,4 +31,10 @@ def transactions_list(request):
 
 @login_required
 def create_transaction(request):
-    pass
+    context = {'form': TransactionForm()}
+
+    if request.htmx:
+        return render(request, 'tracker/partials/create-transaction.html', context)
+    else:
+        raise PermissionDenied()
+
