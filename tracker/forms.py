@@ -7,6 +7,13 @@ class TransactionForm(forms.ModelForm):
         widget = forms.RadioSelect()
     )
     
+    # amount field - data validation
+    def clean_amount(self):
+        amount = self.cleaned_data['amount']
+        if amount <= 0:
+            raise forms.ValidationError("Amount must be above $0")
+        return amount
+    
     class Meta:
         model = Transaction
         fields = (
