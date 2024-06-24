@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django_htmx.http import retarget
 from tracker.models import Transaction
 from tracker.filters import TransactionFilter
 from tracker.forms import TransactionForm
@@ -43,7 +44,9 @@ def create_transaction(request):
             return render(request, 'tracker/partials/transaction-success.html', context)
         else:
             context = {'form': form}
-            return render(request, 'tracker/partials/create-transaction.html', context)
+            response = render(request, 'tracker/partials/create-transaction.html', context)
+            # change target of htmx response when errors on form (to avoid duplicate headers)
+            return retarget(response, '#transaction-block')
     
     context = {'form': TransactionForm()}
 
