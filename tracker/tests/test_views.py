@@ -1,8 +1,10 @@
 from datetime import datetime, timedelta
 import pytest
 from django.urls import reverse
-from tracker.models import Category
+from tracker.models import Category, Transaction
+from pytest_django.asserts import assertTemplateUsed
 
+# mark allows access to django database for testing
 @pytest.mark.django_db
 def test_total_values_appear_on_transaction_page(user_transactions, client):
     user = user_transactions[0].user
@@ -89,6 +91,40 @@ def test_category_filter(user_transactions, client):
         
     print("category filter passed")
 
+@pytest.mark.django_db
+def test_add_transaction_request(user, transaction_dict_params, client):
+    client.force_login(user)
+    user_transaction_count = Transaction.objects.filter(user=user).count()
+    # send request with dummy transaction data
+    headers = {'HTTP_HX-Request': 'true'}
+    response = client.post(
+        reverse('create-transaction'),
+        transaction_dict_params,
+        **headers
+    )
+    # confirm the transaction count has increased by one after transaction POST request
+    assert Transaction.objects.filter(user=user).count() == user_transaction_count + 1
+    # confirm transaction was successful and correct template shown
+    assertTemplateUsed(response, 'tracker/partials/transaction-success.html')
+
+    print("add transaction test passed")
+
+@pytest.mark.django_db
+def test_cannot_add_transaction_with_negative_amount(user, transaction_dict_params, client):
+    client.force_login(user)
+    user_transaction_count = Transaction.objects.filter(user=user).count()
+    # override transaction value with negative number
+    transaction_dict_params['amount'] = -20
+    headers = {'HTTP_HX-Request': 'true'}
+    response = client.post(
+        reverse('create-transaction'),
+        transaction_dict_params,
+        **headers
+    )
+    # confirm transaction failed as it was negative (count should be unchanged)
+    assert Transaction.objects.filter(user=user).count() == user_transaction_count
+    assertTemplateUsed(response, 'tracker/partials/create-transaction.html')
+    # confirm failed form response is correctly applying HTMX retarget
+    assert 'HX-Retarget' in response.headers
     
-    
-    
+    print("cannot add negative transaction test passed")
