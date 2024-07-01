@@ -29,4 +29,8 @@
     <button class="btn btn-success">
         Add
     </button>
+    <button class="btn btn-error" 
+        hx-get="{% url 'transactions-list' %}" hx-target="#transaction-block" hx-push-url="true">
+        Cancel
+    </button>
 </form>
