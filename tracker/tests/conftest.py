@@ -2,6 +2,7 @@ import pytest
 from tracker.factories import TransactionFactory, UserFactory
 
 # fixtures set up a consistent state for testing, and removes this data once tests are complete
+# for creating dummy users, or transactions, for tests
 @pytest.fixture
 def transactions():
     return TransactionFactory.create_batch(25)
