@@ -5,26 +5,8 @@
 </h1>
 
 <form hx-post="{% url 'create-transaction' %}">
-    <div class="mb-2 form-control">
-        {{ form.date|add_label_class:"label text-white" }}
-        {% render_field form.date class="input text-black" %}
-    </div>
-    <div class="mb-2 form-control text-black">
-        {{ form.type|add_label_class:"label text-white" }}
-        {% render_field form.type class="input" %}
-    </div>
-    <div class="mb-2 form-control">
-        {{ form.amount|add_label_class:"label text-white" }}
-        {% render_field form.amount class="input text-black" %}
 
-        {% for error in form.amount.errors %}
-            <p class="text-red-500 mt-2">{{error}}</p>
-        {% endfor %}
-    </div>
-    <div class="mb-2 form-control">
-        {{ form.category|add_label_class:"label text-white" }}
-        {% render_field form.category class="border-gray-50 text-gray-100 rounded focus:ring-green-500" %}
-    </div>
+    {% include 'tracker/partials/transaction-form.html' %}
 
     <button class="btn btn-success">
         Add
