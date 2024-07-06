@@ -57,7 +57,7 @@ def create_transaction(request):
 
 @login_required
 def update_transaction(request, pk):
-    transaction = get_object_or_404(Transaction, pk=pk)
+    transaction = get_object_or_404(Transaction, pk=pk, user=request.user)
     
     if request.method == 'POST':
         # update existing instance, don't create new entry

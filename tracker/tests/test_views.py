@@ -128,3 +128,27 @@ def test_cannot_add_transaction_with_negative_amount(user, transaction_dict_para
     assert 'HX-Retarget' in response.headers
     
     print("cannot add negative transaction test passed")
+
+@pytest.mark.django_db
+def test_update_transaction_request(user, transaction_dict_params, client):
+    client.force_login(user)
+    # confirm test user only has one transaction (as per test factory setup)
+    assert Transaction.objects.filter(user=user).count() == 1
+
+    transaction = Transaction.objects.first()
+
+    # update the transaction via a POST request - mutate the dict params
+    now = datetime.now().date()
+    transaction_dict_params['amount'] = 99
+    transaction_dict_params['date'] = now
+    client.post(
+        reverse('update-transaction', kwargs={'pk': transaction.pk}),
+        transaction_dict_params
+    )
+
+    # check the request has UPDATED, not created a new transaction
+    assert Transaction.objects.filter(user=user).count() == 1
+    transaction = Transaction.objects.first()
+    assert transaction.amount == 99
+    assert transaction.date == now
+    print("update transaction test passed")
