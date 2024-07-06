@@ -58,5 +58,27 @@ def create_transaction(request):
 @login_required
 def update_transaction(request, pk):
     transaction = get_object_or_404(Transaction, pk=pk)
-    context = {}
+    
+    if request.method == 'POST':
+        # update existing instance, don't create new entry
+        form = TransactionForm(request.POST, instance=transaction)
+        if form.is_valid():
+            transaction = form.save()
+            # add user to transaction first
+            context = {'message': "Transaction updated successfully"}
+            return render(request, 'tracker/partials/transaction-success.html', context)  
+        else:
+            context = {
+                'form': form,
+                'transaction': transaction,
+            }
+            response = render(request, 'tracker/partials/update-transaction.html', context)
+            return retarget(response, '#transaction-block')
+        
+    # pre-populate form with data from transaction instance
+    context = {
+                'form': TransactionForm(instance=transaction),
+                'transaction': transaction,
+            }
+    
     return render(request, 'tracker/partials/update-transaction.html', context)
