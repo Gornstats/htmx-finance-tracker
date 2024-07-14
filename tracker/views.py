@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.core.exceptions import PermissionDenied
+from django.conf import settings
+from django.core.paginator import Paginator
 from django_htmx.http import retarget
 from tracker.models import Transaction
 from tracker.filters import TransactionFilter
@@ -18,9 +20,13 @@ def transactions_list(request):
         # select_related avoids n+1 problem, creates JOIN to include related model data
         queryset=Transaction.objects.filter(user=request.user).select_related('category')
     )
+    paginator = Paginator(transaction_filter.qs, settings.PAGE_SIZE)
+    # default to first page of transactions, will be overridden with any subsequent htmx requests
+    transaction_page = paginator.page(1)
+    
     total_income = transaction_filter.qs.get_total_income()
     total_expenses = transaction_filter.qs.get_total_expenses()
-    context = {'filter': transaction_filter,
+    context = {'transactions': transaction_page,
                 'total_income': total_income,
                 'total_expenses': total_expenses,
                 'net_income': total_income - total_expenses

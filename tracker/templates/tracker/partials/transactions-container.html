@@ -39,7 +39,7 @@
                 </svg>
             </a>
         </div>
-        {% if filter.qs %}
+        {% if transactions %}
         <table class="table">
             <thead class="text-xs text-white uppercase">
                 <tr>
@@ -52,7 +52,7 @@
             </thead>
     
             <tbody>
-                {% for transaction in filter.qs %}
+                {% for transaction in transactions %}
                 <tr>
                     <td>{{ transaction.date }}</td>
                     <td>{{ transaction.category }}</td>
