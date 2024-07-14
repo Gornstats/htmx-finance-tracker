@@ -55,7 +55,7 @@
             <tbody>
                 {% partialdef transaction_list inline=True %}
                 {% for transaction in transactions %}
-                    {% if forloop.last %}
+                    {% if forloop.last and transactions.has_next %}
                     <!-- last row triggers load of next page of data -->
                     <tr hx-get="{% url 'get-transactions' %}?page={{transactions.next_page_number}}" 
                         hx-trigger="revealed" hx-swap="afterend">
