@@ -38,6 +38,21 @@ def transactions_list(request):
         return render(request, 'tracker/transactions-list.html', context)
 
 @login_required
+def get_transactions(request):
+    page = request.GET.get('page', 1)
+    transaction_filter = TransactionFilter(
+        request.GET,
+        queryset=Transaction.objects.filter(user=request.user).select_related('category')
+    )
+    paginator = Paginator(transaction_filter.qs, settings.PAGE_SIZE)
+    context = {
+        'transactions': paginator.page(page)
+    }
+    # django-template-list partial is referenced by name with a preceding # after URL
+    return render(request, 'tracker/partials/transactions-container.html#transaction_list', context)
+
+
+@login_required
 def create_transaction(request):
     if request.method == 'POST':
         form = TransactionForm(request.POST)
