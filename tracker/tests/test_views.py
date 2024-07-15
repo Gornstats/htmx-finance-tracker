@@ -32,7 +32,7 @@ def test_transaction_type_filter(user_transactions, client):
     GET_params = {'transaction_type': 'income'}
     response = client.get(reverse('transactions-list'), GET_params)
     
-    qs = response.context['filter'].qs
+    qs = response.context['transactions']
     
     for transaction in qs:
         assert transaction.type == 'income'
@@ -41,7 +41,7 @@ def test_transaction_type_filter(user_transactions, client):
     GET_params = {'transaction_type': 'expense'}
     response = client.get(reverse('transactions-list'), GET_params)
     
-    qs = response.context['filter'].qs
+    qs = response.context['transactions']
     
     for transaction in qs:
         assert transaction.type == 'expense'
@@ -57,7 +57,7 @@ def test_start_end_date_filter(user_transactions, client):
     GET_params = {'start_date': start_date_cutoff}
     response = client.get(reverse('transactions-list'), GET_params)
     
-    qs = response.context['filter'].qs
+    qs = response.context['transactions']
     
     for transaction in qs:
         assert transaction.date >= start_date_cutoff
@@ -66,7 +66,7 @@ def test_start_end_date_filter(user_transactions, client):
     GET_params = {'end_date': end_date_cutoff}
     response = client.get(reverse('transactions-list'), GET_params)
 
-    qs = response.context['filter'].qs
+    qs = response.context['transactions']
 
     for transaction in qs:
         assert transaction.date <= end_date_cutoff
@@ -84,7 +84,7 @@ def test_category_filter(user_transactions, client):
 
     response = client.get(reverse('transactions-list'), GET_params)
 
-    qs = response.context['filter'].qs
+    qs = response.context['transactions']
 
     for transaction in qs:
         assert transaction.category.pk in category_pks
