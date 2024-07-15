@@ -58,7 +58,9 @@
                     {% if forloop.last and transactions.has_next %}
                     <!-- last row triggers load of next page of data -->
                     <tr hx-get="{% url 'get-transactions' %}?page={{transactions.next_page_number}}" 
-                        hx-trigger="revealed" hx-swap="afterend">
+                        hx-trigger="revealed" 
+                        hx-swap="afterend" 
+                        hx-include="#filterform">
                     {% else %}
                     <tr>
                     {% endif %}
@@ -104,22 +106,23 @@
     <div class="col-span-1">
         <form hx-get="{% url 'transactions-list' %}"
             hx-target="#transaction-container" 
-            hx-swap="outerHTML">
+            hx-swap="outerHTML" 
+            id="filterform">
             <div class="mb-2 form-control">
                 <!--widget_tweaks allows for adding class to form labels-->
-                {{ filter.form.transaction_type|add_label_class:"label text-white" }}
-                {% render_field filter.form.transaction_type class="select bg-gray-50 text-gray-900" %}
+                {{ transactions.form.transaction_type|add_label_class:"label text-white" }}
+                {% render_field transactions.form.transaction_type class="select bg-gray-50 text-gray-900" %}
             </div>
             <div class="mb-2 form-control">
-                {{ filter.form.start_date|add_label_class:"label text-white" }}
-                {% render_field filter.form.start_date class="input bg-gray-50 text-gray-900" %}
+                {{ transactions.form.start_date|add_label_class:"label text-white" }}
+                {% render_field transactions.form.start_date class="input bg-gray-50 text-gray-900" %}
             </div>
             <div class="mb-2 form-control">
-                {{ filter.form.end_date|add_label_class:"label text-white" }}
-                {% render_field filter.form.end_date class="input bg-gray-50 text-gray-900" %}
+                {{ transactions.form.end_date|add_label_class:"label text-white" }}
+                {% render_field transactions.form.end_date class="input bg-gray-50 text-gray-900" %}
             </div>
             <div class="mb-4 form-control">
-                {% render_field filter.form.category class="border-gray-50 text-gray-100 rounded focus:ring-green-500" %}
+                {% render_field transactions.form.category class="border-gray-50 text-gray-100 rounded focus:ring-green-500" %}
             </div>
     
             <button class="btn btn-success text-gray-100 hover:fill-green-700">
